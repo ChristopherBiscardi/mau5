@@ -17,7 +17,6 @@ A PUT with content-type "application/json" results in the data being updated in 
 
 ## TODO:
 
-1. Read from Riak and send to ES
 2. Make Read/Write urls configurable
 3. Allow config files and command line args to start process
 4. Implement Message Queue for guarenteed processing of successful Riak inserts
@@ -32,13 +31,15 @@ Assumptions:
 
 ##### Insert Data
 
-`bash
+`
     curl 127.0.0.1:3500/riak/test/1 -XPUT -d '{somedata:"testing, but with prizes!"}' -v -H "Content-Type: application/json"
+`
+`
     curl 127.0.0.1:3500/riak/test/1 -XPUT -d '{somedata:"This is some testing content"}' -v -H "Content-Type: application/json"
 `
 ##### Query ES
 
-`bash
+`
     curl localhost:9200/riak/test/_search?q=somedata:prizes
 `
 
