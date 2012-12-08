@@ -13,6 +13,7 @@ Just started a Riak -> ElasticSearch River.
 ## So Far:
 
 Proxy to Riak works.
+A PUT with content-type "application/json" results in the data being updated in ES
 
 ## TODO:
 
@@ -25,4 +26,19 @@ Proxy to Riak works.
 
 `./bin/mau5`
 
-`curl localhost:3500 -XPUT -v -d somedata="thisis" -H "Content-Type: application/json"`
+Assumptions:
+* Riak running on port 10018
+* ElasticSearch running on port 9200
+
+##### Insert Data
+
+`bash
+    curl 127.0.0.1:3500/riak/test/1 -XPUT -d '{somedata:"testing, but with prizes!"}' -v -H "Content-Type: application/json"
+    curl 127.0.0.1:3500/riak/test/1 -XPUT -d '{somedata:"This is some testing content"}' -v -H "Content-Type: application/json"
+`
+##### Query ES
+
+`bash
+    curl localhost:9200/riak/test/_search?q=somedata:prizes
+`
+
