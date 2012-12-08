@@ -1,0 +1,27 @@
+{
+  "name": "mau5",
+  "version": "0.0.1",
+  "description": "ElasticSearch River for Riak",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "s"
+  },
+  "keywords": [
+    "riak",
+    "elastic",
+    "search"
+  ],
+  "bin": {
+    "mau5": "bin/mau5"
+  },
+  "author": "Chris Biscardi",
+  "license": "MIT",
+  "dependencies": {
+    "request": "~2.12.0",
+    "http-proxy": "~0.8.5"
+  }
+}

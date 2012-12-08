@@ -1,0 +1,22 @@
+var http = require('http'),
+    httpProxy = require('http-proxy');
+
+var proxy = new httpProxy.RoutingProxy();
+
+http.createServer(function (req, res) {
+
+  proxy.proxyRequest(req, res, {
+    host: 'localhost',
+    port: 10018
+  });
+
+}).listen(3500);
+
+proxy.on('end', function(r,ra, b) {
+  console.log("The request was proxied.");
+  if(ra.statusCode >= 200 && ra.statusCode < 300 && r.method === "PUT"){
+    console.log(r.method);
+    console.log('Should GET information from riak at url: ', r.url);
+    console.log('Then insert in Elastic');
+  }
+});
