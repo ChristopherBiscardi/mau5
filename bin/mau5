@@ -1,20 +1,54 @@
-var http = require('http'),
-    httpProxy = require('http-proxy');
+#!/usr/bin/env node
 
+var http = require('http'),
+httpProxy = require('http-proxy');
 var proxy = new httpProxy.RoutingProxy();
+var request = require('request');
+
+var ESServer = {
+  host:'http://localhost',
+  port:9200
+};
+
+var RiakWriteServer = {
+  host:'localhost',
+  port:10018
+};
+
+var RiakReadServer = {
+  host:'http://localhost',
+  port:10018
+};
 
 http.createServer(function (req, res) {
 
   proxy.proxyRequest(req, res, {
-    host: 'localhost',
-    port: 10018
+    host: RiakWriteServer.host,
+    port: RiakWriteServer.port
   });
 
 }).listen(3500);
 
 proxy.on('end', function(r,ra, b) {
   console.log("The request was proxied.");
-  if(ra.statusCode >= 200 && ra.statusCode < 300 && r.method === "PUT"){
+  if(ra.statusCode >= 200 && ra.statusCode < 300 && r.method === "PUT" && r.headers['content-type'] === "application/json"){
+    request.get({
+      url: RiakReadServer.host + ':' + RiakReadServer.port + r.url
+    }, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        console.log(body);
+        request.put({
+          url: ESServer.host + ':' + ESServer.port + r.url,
+          body:body
+        }, function(err, esres, esbody){
+          if (!error && response.statusCode == 200) {
+            console.log('success to ES');
+            console.log(esbody);
+          }
+        });
+        // console.log(body);
+      }
+    });
     console.log(r.method);
     console.log('Should GET information from riak at url: ', r.url);
     console.log('Then insert in Elastic');
